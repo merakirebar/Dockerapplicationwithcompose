@@ -1,0 +1,44 @@
+services:
+
+  mysql:
+    build:
+      context: ./database
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: gardening_db
+      MYSQL_USER: gardenuser
+      MYSQL_PASSWORD: gardenpass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./backend
+    container_name: gardening-backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      DB_HOST: mysql
+      DB_USER: gardenuser
+      DB_PASSWORD: gardenpass
+      DB_NAME: gardening_db
+    depends_on:
+      - mysql
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: gardening-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
