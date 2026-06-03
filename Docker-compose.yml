@@ -2,7 +2,7 @@ services:
 
   mysql:
     build:
-      context: ./database
+      context: ./mysql
     container_name: mysql
     restart: always
     environment:
